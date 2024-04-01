@@ -196,6 +196,16 @@ class _DaemonCtrlState extends State<DaemonCtrl> {
     return result;
   }
 
+  Future<void> readLog() async {
+    var directory = await getApplicationDocumentsDirectory();
+    var logPath = path.join(directory.path, "edge.log");
+    File file = File(logPath);
+
+    // Read the contents of the file
+    String contents = await file.readAsString();
+    debugPrint(contents);
+  }
+
   void handleStartStopClick() async {
     if (isClickHandling) {
       return;
@@ -235,6 +245,10 @@ class _DaemonCtrlState extends State<DaemonCtrl> {
   void handleReadConfigClick() async {
     var ret = await readConfig();
     debugPrint('handleReadConfigClick: $ret');
+  }
+
+  void handleReadLogClick() async {
+    await readLog();
   }
 
   void queryDaemonState() async {
@@ -306,7 +320,7 @@ class _DaemonCtrlState extends State<DaemonCtrl> {
             }
             handleSignClick();
           },
-          child: Text(
+          child: const Text(
             "Sign",
           ),
         ),
@@ -317,7 +331,7 @@ class _DaemonCtrlState extends State<DaemonCtrl> {
             }
             handleSetConfigClick();
           },
-          child: Text(
+          child: const Text(
             "Set config",
           ),
         ),
@@ -328,8 +342,19 @@ class _DaemonCtrlState extends State<DaemonCtrl> {
             }
             handleReadConfigClick();
           },
-          child: Text(
+          child: const Text(
             "read config",
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            if (isClickHandling) {
+              return;
+            }
+            handleReadLogClick();
+          },
+          child: const Text(
+            "read log",
           ),
         )
       ],

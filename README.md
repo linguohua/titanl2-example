@@ -23,4 +23,4 @@ samples, guidance on mobile development, and a full API reference.
 
 ### GOOS=android GOARCH=arm CGO_ENABLED=1 CC=D:/Android/SDK/ndk/26.1.10909125/toolchains/llvm/prebuilt/windows-x86_64/bin/armv7a-linux-androideabi34-clang go build -buildmode=c-shared -o ../titanl2-example/android/app/src/main/jniLibs/armeabi-v7a/libgol2.so .
 
-### go build -buildmode=c-shared -o ../titanl2-example/windows/libs/gol2.so
+### go build -buildmode=c-shared -o ../titanl2-example/windows/libs/gol2.dll
