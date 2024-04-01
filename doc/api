@@ -1,0 +1,74 @@
+
+主接口:
+String jsonCall(String args)
+参数说明：
+args 是一个json字符串, 任何子方法的调用都依赖args
+{
+ "method":子接口的方法名。type String
+ "JSONParams":传给子接口的参数。type String
+}
+
+返回值是一个json字符串, 需要根据具体的子方法来解析Data字段
+{
+"code":错误吗,目前只有-1与0, -1是发生了错误, 0是正确。type int
+"msg": 发生错误时返回错误消息。type String 
+"data": 当正确的时候, 会返回子接口的返回值。type String
+}
+
+
+子接口
+1. startDaemon
+方法名: startDaemon
+参数：
+{
+"repoPath":titan-edge的仓库目录, 主要用来放titan-edge的配置
+"logPath":放置titan-edge日志文件路径, 这个由flutter来管理, 可以直接读取
+"locatorURL": titan服务器的url
+}
+
+返回值为空, 就是data为空
+
+2. stopDaemon
+方法名: stopDaemon
+参数为空
+返回值为空, 就是data为空
+
+3. sign
+方法名: sign
+参数
+{
+"repoPath":仓库路径
+"hash": 需要签名的hash, 从web获取
+}
+
+返回值：
+{
+"signature": 签名
+}
+
+4. state
+方法名: state
+参数为空
+返回值
+{
+"running":表示节点正在运行
+"online":表示节点在线
+}
+
+
+5. mergeConfig
+方法名: mergeConfig
+参数
+{
+"repoPath": 仓库路径
+"config": toml格式的配置文件。type String
+}
+返回值：新的完整配置,配置是json格式
+
+6. readConfig
+方法名: readConfig
+参数
+{
+"repoPath": 仓库路径
+}
+返回值：新的完整配置,配置是json格式

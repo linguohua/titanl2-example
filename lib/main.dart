@@ -40,29 +40,16 @@ class _MyAppState extends State<MyApp> {
         body: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(10),
-            child: Column(
+            child: const Column(
               children: [
-                const Text(
+                Text(
                   'This calls a native function through FFI that is shipped as source in the package. '
                   'The native code is built as part of the Flutter Runner build.',
                   style: textStyle,
                   textAlign: TextAlign.center,
                 ),
                 spacerSmall,
-                // FutureBuilder<String>(
-                //   future: signAsyncResult,
-                //   builder: (BuildContext context, AsyncSnapshot<String> value) {
-                //     final displayValue =
-                //         (value.hasData) ? value.data : 'loading';
-                //     return Text(
-                //       'await sign("abc") = $displayValue',
-                //       style: textStyle,
-                //       textAlign: TextAlign.center,
-                //     );
-                //   },
-                // ),
-                spacerSmall,
-                const DaemonCtrl(),
+                DaemonCtrl(),
               ],
             ),
           ),
@@ -87,131 +74,126 @@ class _DaemonCtrlState extends State<DaemonCtrl> {
   late Timer timer;
   bool isQuerying = false;
 
+  Future<String> stopDaemon() async {
+    Map<String, dynamic> stopDaemonArgs = {
+      'method': 'stopDaemon',
+      'JSONParams': "",
+    };
 
-   Future<String> stopDaemon() async{
-      Map<String, dynamic> stopDaemonArgs = {
-        'method': 'stopDaemon',
-        'JSONParams': "",
-      };
+    var args = json.encode(stopDaemonArgs);
 
-      var args = json.encode(stopDaemonArgs);
-
-      var result = await nativel2.L2APIs().jsonCall(args);
-      return result;
+    var result = await nativel2.L2APIs().jsonCall(args);
+    return result;
   }
 
   Future<String> startDaemon() async {
-     var directory = await getApplicationDocumentsDirectory();
-     var repoPath = path.join(directory.path, "titanl2");
-     var repoDirectory = Directory(repoPath);
-     if (!await repoDirectory.exists()) {
-       await repoDirectory.create();
-     }
+    var directory = await getApplicationDocumentsDirectory();
+    var repoPath = path.join(directory.path, "titanl2");
+    var repoDirectory = Directory(repoPath);
+    if (!await repoDirectory.exists()) {
+      await repoDirectory.create();
+    }
 
-      print("path ${repoDirectory}");
+    debugPrint('path: $repoDirectory');
 
-      Map<String, dynamic> startDaemonArgs = {
-        'repoPath': repoPath,
-        'logPath': path.join(directory.path, "edge.log"),
-        'locatorURL':"https://test-locator.titannet.io:5000/rpc/v0"
-      };
+    Map<String, dynamic> startDaemonArgs = {
+      'repoPath': repoPath,
+      'logPath': path.join(directory.path, "edge.log"),
+      'locatorURL': "https://test-locator.titannet.io:5000/rpc/v0"
+    };
 
-      String startDaemonArgsJSON = json.encode(startDaemonArgs);
+    String startDaemonArgsJSON = json.encode(startDaemonArgs);
 
-      Map<String, dynamic> jsonCallArgs = {
-        'method': 'startDeamon',
-        'JSONParams': startDaemonArgsJSON,
-      };
+    Map<String, dynamic> jsonCallArgs = {
+      'method': 'startDaemon',
+      'JSONParams': startDaemonArgsJSON,
+    };
 
-      var args = json.encode(jsonCallArgs);
+    var args = json.encode(jsonCallArgs);
 
-      var result = await nativel2.L2APIs().jsonCall(args);
-      return result;
+    var result = await nativel2.L2APIs().jsonCall(args);
+    return result;
   }
 
   Future<String> daemonState() async {
-      Map<String, dynamic> jsonCallArgs = {
-        'method': 'state',
-        'JSONParams': "",
-      };
+    Map<String, dynamic> jsonCallArgs = {
+      'method': 'state',
+      'JSONParams': "",
+    };
 
-      var args = json.encode(jsonCallArgs);
+    var args = json.encode(jsonCallArgs);
 
-      var result = await nativel2.L2APIs().jsonCall(args);
-      return result;
+    var result = await nativel2.L2APIs().jsonCall(args);
+    return result;
   }
 
   Future<String> daemonSign() async {
-     var directory = await getApplicationDocumentsDirectory();
-     var repoPath = path.join(directory.path, "titanl2");
+    var directory = await getApplicationDocumentsDirectory();
+    var repoPath = path.join(directory.path, "titanl2");
 
-      Map<String, dynamic> signReqArgs = {
-        'repoPath': repoPath,
-        'hash':"abc"
-      };
+    Map<String, dynamic> signReqArgs = {'repoPath': repoPath, 'hash': "abc"};
 
-      var signReqArgsJSON = json.encode(signReqArgs);
+    var signReqArgsJSON = json.encode(signReqArgs);
 
-      Map<String, dynamic> jsonCallArgs = {
-        'method': 'sign',
-        'JSONParams': signReqArgsJSON,
-      };
+    Map<String, dynamic> jsonCallArgs = {
+      'method': 'sign',
+      'JSONParams': signReqArgsJSON,
+    };
 
-      var args = json.encode(jsonCallArgs);
+    var args = json.encode(jsonCallArgs);
 
-      var result = await nativel2.L2APIs().jsonCall(args);
-      return result;
+    var result = await nativel2.L2APIs().jsonCall(args);
+    return result;
   }
 
   Future<String> mergeConfig() async {
+    Map<String, dynamic> configs = {
+      'Storage': {"StorageGB": 32, "Path": "D:/filecoin-titan/test2"},
+    };
 
-      Map<String, dynamic> configs = {
-        'Storage': {"StorageGB": 32, "Path":"D:/filecoin-titan/test2"},
-      };
-
-      var configFile = TomlDocument.fromMap(configs).toString();
+    var configFile = TomlDocument.fromMap(configs).toString();
 
     // debugPrint('configsJSON: $configFile');
-     var directory = await getApplicationDocumentsDirectory();
-     var repoPath = path.join(directory.path, "titanl2");
+    var directory = await getApplicationDocumentsDirectory();
+    var repoPath = path.join(directory.path, "titanl2");
 
-      Map<String, dynamic> mergeConfigReqArgs = {
-        'repoPath': repoPath,
-        "config": configFile
-      };
+    Map<String, dynamic> mergeConfigReqArgs = {
+      'repoPath': repoPath,
+      "config": configFile
+    };
 
-      var mergeConfigReqArgsJSON = json.encode(mergeConfigReqArgs);
+    var mergeConfigReqArgsJSON = json.encode(mergeConfigReqArgs);
 
-      Map<String, dynamic> jsonCallArgs = {
-        'method': 'mergeConfig',
-        'JSONParams': mergeConfigReqArgsJSON,
-      };
+    Map<String, dynamic> jsonCallArgs = {
+      'method': 'mergeConfig',
+      'JSONParams': mergeConfigReqArgsJSON,
+    };
 
-      var args = json.encode(jsonCallArgs);
+    var args = json.encode(jsonCallArgs);
 
-      var result = await nativel2.L2APIs().jsonCall(args);
-      return result;
+    var result = await nativel2.L2APIs().jsonCall(args);
+    return result;
   }
 
   Future<String> readConfig() async {
-     var directory = await getApplicationDocumentsDirectory();
-     var repoPath = path.join(directory.path, "titanl2");
+    var directory = await getApplicationDocumentsDirectory();
+    var repoPath = path.join(directory.path, "titanl2");
 
-      Map<String, dynamic> readConfigReqArgs = {
-        'repoPath': repoPath,
-      };
+    Map<String, dynamic> readConfigReqArgs = {
+      'repoPath': repoPath,
+    };
 
-      var readConfigReqArgsJSON = json.encode(readConfigReqArgs);
+    var readConfigReqArgsJSON = json.encode(readConfigReqArgs);
 
-      Map<String, dynamic> jsonCallArgs = {
-        'method': 'readConfig',
-        'JSONParams': readConfigReqArgsJSON,
-      };
+    Map<String, dynamic> jsonCallArgs = {
+      'method': 'readConfig',
+      'JSONParams': readConfigReqArgsJSON,
+    };
 
-      var args = json.encode(jsonCallArgs);
+    var args = json.encode(jsonCallArgs);
 
-      var result = await nativel2.L2APIs().jsonCall(args);
-      return result;
+    var result = await nativel2.L2APIs().jsonCall(args);
+    return result;
   }
 
   void handleStartStopClick() async {
@@ -245,19 +227,15 @@ class _DaemonCtrlState extends State<DaemonCtrl> {
     debugPrint('handleSignClick: $ret');
   }
 
-  
   void handleSetConfigClick() async {
     var ret = await mergeConfig();
     debugPrint('handleSetConfigClick: $ret');
   }
 
-
   void handleReadConfigClick() async {
-     var ret = await readConfig();
+    var ret = await readConfig();
     debugPrint('handleReadConfigClick: $ret');
   }
-
-
 
   void queryDaemonState() async {
     if (isQuerying) {
