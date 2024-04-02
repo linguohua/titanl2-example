@@ -6,7 +6,6 @@ import 'nativel2_bindings_generated.dart';
 import 'package:ffi/ffi.dart';
 import 'package:path/path.dart' as path;
 
-
 class JSONCallRsp {
   JSONCallRsp(this.requestID, this.rsp);
   final int requestID;
@@ -26,7 +25,7 @@ class JSONCallExecutor {
   final JSONCallContext _context;
 
   JSONCallRsp doNativeCall() {
-    final Nativel2Bindings bindings = L2APIs()._bindings;
+    final Nativel2Bindings bindings = L2Golang()._bindings;
 
     var argsPtr = _context.args!.toNativeUtf8().cast<Char>();
     Pointer<Char> ptrChar = bindings.JSONCall(argsPtr);
@@ -39,9 +38,9 @@ class JSONCallExecutor {
   }
 }
 
-class L2APIs {
+class L2Golang {
   // singleton pattern
-  static final L2APIs _instance = L2APIs._internal();
+  static final L2Golang _instance = L2Golang._internal();
 
   static const String _libName = 'gol2';
 
@@ -54,7 +53,8 @@ class L2APIs {
     }
     if (Platform.isWindows) {
       var currentDir = path.dirname(Platform.script.toFilePath());
-      var libraryPath = path.join(currentDir, 'windows', 'libs', '$_libName.dll');
+      var libraryPath =
+          path.join(currentDir, 'windows', 'libs', '$_libName.dll');
       return DynamicLibrary.open(libraryPath);
     }
     throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
@@ -66,12 +66,12 @@ class L2APIs {
       <int, Completer<String>>{};
   late Future<SendPort> _helperIsolateSendPortFuture;
 
-  L2APIs._internal() {
+  L2Golang._internal() {
     _bindings = Nativel2Bindings(_dylib);
     _helperIsolateSendPortFuture = _isolateNew();
   }
 
-  factory L2APIs() {
+  factory L2Golang() {
     return _instance;
   }
 
@@ -138,5 +138,4 @@ class L2APIs {
 
     return completer.future;
   }
-
 }
