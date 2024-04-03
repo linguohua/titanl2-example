@@ -36,6 +36,9 @@ dependencies:
   path_provider: ^2.0.2
   path: ^1.8.3
   toml: ^0.15.0
+  flutter_background_service: ^5.0.5
+  flutter_background_service_android: ^6.2.2
+  flutter_local_notifications: ^17.0.0
   # nativel2:
   #   # When depending on this package from a real application you should use:
   #   #   nativel2: ^x.y.z

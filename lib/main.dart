@@ -2,13 +2,18 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'titanedge_jcall.dart' as nativel2;
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io';
 import 'package:toml/toml.dart';
+import 'nativel2_service.dart' as titanservice;
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isAndroid) {
+    await titanservice.L2Service().initializeService();
+  }
+
   runApp(const MyApp());
 }
 
@@ -82,7 +87,7 @@ class _DaemonCtrlState extends State<DaemonCtrl> {
 
     var args = json.encode(stopDaemonArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await titanservice.L2Service().jsonCall(args);
     return result;
   }
 
@@ -111,7 +116,7 @@ class _DaemonCtrlState extends State<DaemonCtrl> {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await titanservice.L2Service().jsonCall(args);
     return result;
   }
 
@@ -123,7 +128,7 @@ class _DaemonCtrlState extends State<DaemonCtrl> {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await titanservice.L2Service().jsonCall(args);
     return result;
   }
 
@@ -142,7 +147,7 @@ class _DaemonCtrlState extends State<DaemonCtrl> {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await titanservice.L2Service().jsonCall(args);
     return result;
   }
 
@@ -171,7 +176,7 @@ class _DaemonCtrlState extends State<DaemonCtrl> {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await titanservice.L2Service().jsonCall(args);
     return result;
   }
 
@@ -192,7 +197,7 @@ class _DaemonCtrlState extends State<DaemonCtrl> {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await titanservice.L2Service().jsonCall(args);
     return result;
   }
 
